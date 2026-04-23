@@ -4,6 +4,38 @@
 -- Music: milkyways by bossfight
 -- Enjoy!
 
+local Player = game:Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+
+local VoidConnection
+
+VoidConnection = Humanoid.Died:Connect(function()
+  game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "You died",
+        Text = "Cool",
+        Duration = 3,
+    })
+
+    -- This disconnects the "Died" event so it can't trigger again
+    if VoidConnection then
+        VoidConnection:Disconnect()
+        VoidConnection = nil
+    end
+
+    -- If you have loops running, we force them to stop here
+    _G.StopVoidScript = true 
+    
+    script:Destroy() 
+end)
+
+
+task.spawn(function()
+    _G.StopVoidScript = false
+    end
+end) 
+
+
 task.spawn(function()
     local success = false
     while not success do
