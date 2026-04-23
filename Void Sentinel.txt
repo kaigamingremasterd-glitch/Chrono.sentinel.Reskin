@@ -4,8 +4,6 @@
 -- Music: milkyways by bossfight
 -- Enjoy! 
 
--- Yay
-
 local RunService = game:GetService("RunService")
 local PinkColor = Color3.fromRGB(255, 0, 255)
 
