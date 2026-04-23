@@ -1,11 +1,7 @@
 -- Original Made By: Pitypolygon
 -- Reskin by: 🔒:••••••••••
 -- Music: milkyways by bossfight
--- Enjoy!
-
-local Player = game:Players.LocalPlayer
-local Character = Player.Character or Player.CharacterAdded:Wait()
-local Humanoid = Character:WaitForChild("Humanoid")
+-- Enjoy! 
 
 local function ForceVoidAesthetic(v)
     if not v:IsA("BasePart") or not _G.VoidSentinelRunning then return end
