@@ -2,29 +2,7 @@
 -- Reskin by: 🔒:••••••••••
 -- Added original music script. 
 -- Music: milkyways by bossfight
--- Enjoy! 
-
-local RunService = game:GetService("RunService")
-local PinkColor = Color3.fromRGB(255, 0, 255)
-
-task.spawn(function()
-    while task.wait(0.001) do
-        for _, v in pairs(workspace:GetDescendants()) do
-            if v:IsA("BasePart") and v.Material == Enum.Material.Neon and v.Color == PinkColor then
-                if not v:FindFirstChild("VoidGlow") then
-                    local light = Instance.new("PointLight")
-                    light.Name = "VoidGlow"
-                    light.Color = PinkColor
-                    light.Range = 20
-                    light.Brightness = 2
-                    light.Shadows = false
-                    light.Parent = v
-                end
-            end
-        end
-    end
-end)
-
+-- Enjoy!
 
 task.spawn(function()
     local success = false
