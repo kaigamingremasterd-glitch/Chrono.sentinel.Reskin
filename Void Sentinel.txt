@@ -4,37 +4,6 @@
 -- Music: milkyways by bossfight
 -- Enjoy!
 
-local Player = game:Players.LocalPlayer
-local Character = Player.Character or Player.CharacterAdded:Wait()
-local Humanoid = Character:WaitForChild("Humanoid")
-
-local DeathConnection
-DeathConnection = Humanoid.Died:Connect(function()
-    _G.VoidSentinelRunning = false
-    
-    if DeathConnection then 
-        DeathConnection:Disconnect() 
-    end
-    
-    for _, name in pairs({"RenderStepped", "Heartbeat", "Stepped"}) do
-        for _, conn in pairs(getconnections(game:GetService("RunService")[name])) do
-            conn:Disable()
-        end
-    end
-
-    local scriptObj = script
-    if scriptObj then
-        scriptObj:Destroy()
-    end
-end)
-
-
-task.spawn(function()
-    _G.StopVoidScript = false
-    end
-end) 
-
-
 task.spawn(function()
     local success = false
     while not success do
