@@ -4,6 +4,22 @@
 -- Music: milkyways by bossfight
 -- Enjoy!
 
+task.spawn(function()
+    local success = false
+    while not success do
+        success = pcall(function()
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Chrono Sentinel Reskin",
+                Text = "Void Sentinel Loaded!",
+                Icon = "rbxassetid://6023426926",
+                Duration = 5,
+            })
+        end)
+        task.wait(0.5)
+    end
+end)
+
+
 local function ForceVoidAesthetic(v)
     if not v:IsA("BasePart") then return end
 
