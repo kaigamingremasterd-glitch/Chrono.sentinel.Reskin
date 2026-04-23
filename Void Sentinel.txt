@@ -1,44 +1,74 @@
--- Original Made By: Pitypolygon
+ 
 -- Reskin by: 🔒:••••••••••
+-- Added original music script. 
 -- Music: milkyways by bossfight
--- Enjoy! 
+-- Enjoy!
+
+task.spawn(function()
+    local success = false
+    while not success do
+        success = pcall(function()
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Chrono Sentinel Reskin",
+                Text = "Void Sentinel Loaded!",
+                Icon = "rbxassetid://6023426926",
+                Duration = 5,
+            })
+        end)
+        task.wait(0.5)
+    end
+end)
+
 
 local function ForceVoidAesthetic(v)
-    if not v:IsA("BasePart") or not _G.VoidSentinelRunning then return end
+    if not v:IsA("BasePart") then return end
+
     local isClock = (v.Name == "Clock" or v.Name:find("Trap") or v.Parent.Name:find("Grandfather"))
     local isCharacter = v:IsDescendantOf(Character)
+    
     local bodyParts = {
         ["Head"] = true, ["Torso"] = true, ["HumanoidRootPart"] = true,
         ["Left Arm"] = true, ["Right Arm"] = true, ["Left Leg"] = true, ["Right Leg"] = true,
+        -- R15 Support
         ["LeftUpperArm"] = true, ["LeftLowerArm"] = true, ["LeftHand"] = true,
         ["RightUpperArm"] = true, ["RightLowerArm"] = true, ["RightHand"] = true,
         ["LeftUpperLeg"] = true, ["LeftLowerLeg"] = true, ["LeftFoot"] = true,
         ["RightUpperLeg"] = true, ["RightLowerLeg"] = true, ["RightFoot"] = true,
         ["UpperTorso"] = true, ["LowerTorso"] = true
     }
+
     if isClock or isCharacter then
+      
         if isClock then
+            -- Force Clock to Cobblestone
             if v.Material ~= Enum.Material.Cobblestone then
                 v.Material = Enum.Material.Cobblestone
             end
         elseif isCharacter then
+            
             if not bodyParts[v.Name] then
                 if v.Material ~= Enum.Material.Cobblestone then
                     v.Material = Enum.Material.Cobblestone
                 end
             end
+            -- Body parts (Arms/Legs/Torso) are ignored, staying original material
         end
+
         if isClock then
+            -- Kill textures so we never see Green Wood
             local mesh = v:FindFirstChildOfClass("SpecialMesh") or v:FindFirstChildOfClass("FileMesh")
             if mesh then mesh.TextureId = "" end
+
             if v.Name == "Clock" or v.Name:find("Gear") or v.Name:find("Glow") or v.Name:find("Trap") then
                 v.Color = Color3.fromRGB(255, 0, 255)
             else
-                v.Color = Color3.fromRGB(0, 0, 0)
+                v.Color = Color3.fromRGB(0, 0, 0) -- BLACK
             end
+
         elseif isCharacter then
+            
             if not bodyParts[v.Name] then
-                v.Color = Color3.fromRGB(125, 0, 255)
+                v.Color = Color3.fromRGB(125, 0, 255) -- PURPLE
             end
         end
     end
@@ -47,13 +77,14 @@ end
 workspace.DescendantAdded:Connect(ForceVoidAesthetic)
 
 task.spawn(function()
-    while _G.VoidSentinelRunning do
-        task.wait(0.01)
+    while task.wait(0.01) do
+        -- Check Clock/Traps
         for _, v in pairs(workspace:GetDescendants()) do
             if v.Name == "Clock" or v.Name:find("Trap") or v.Parent.Name:find("Grandfather") then
                 ForceVoidAesthetic(v)
             end
         end
+       
         if Character then
             for _, p in pairs(Character:GetDescendants()) do
                 ForceVoidAesthetic(p)
