@@ -2,38 +2,7 @@
 -- Reskin by: 🔒:••••••••••
 -- Added original music script. 
 -- Music: milkyways by bossfight
--- Enjoy!
-
-local Player = game:Players.LocalPlayer
-local Character = Player.Character or Player.CharacterAdded:Wait()
-local Humanoid = Character:WaitForChild("Humanoid")
-
-local DeathConnection
-DeathConnection = Humanoid.Died:Connect(function()
-    _G.VoidSentinelRunning = false
-    _G.ChronoSentinelActive = false
-    
-    if DeathConnection then 
-        DeathConnection:Disconnect() 
-    end
-
-    local gui = Player.PlayerGui:FindFirstChild("ChronoSentinelGui") or Player.PlayerGui:FindFirstChild("VoidSentinel")
-    if gui then 
-        gui:Destroy() 
-    end
-
-    for _, name in pairs({"RenderStepped", "Heartbeat", "Stepped"}) do
-        for _, conn in pairs(getconnections(game:GetService("RunService")[name])) do
-            conn:Disable()
-        end
-    end
-
-    for _, conn in pairs(getconnections(game:GetService("UserInputService").InputBegan)) do
-        conn:Disable()
-    end
-
-    script:Destroy()
-end)
+-- Enjoy! 
 
 -- Yay
 
