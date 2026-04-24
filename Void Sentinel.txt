@@ -668,7 +668,7 @@ local PITCH = 1
 local HALO = script.Halo
 HALO.Anchored = false
 local BASECOLOR = HALO.Color
-local SKILLFONT = "SpecialElite"
+local SKILLFONT = "Antique"
 local SKILLTEXTSIZE = 3.5
 local ATTACKS = {
 	{
