@@ -1,12 +1,14 @@
-
 local player = game.Players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
 local runService = game:GetService("RunService")
 
+-- Cleanup old loops
 if _G.SlayerLoop then _G.SlayerLoop:Disconnect() end
+if _G.DeathConnection then _G.DeathConnection:Disconnect() end
 
 local function applyReanimation(character)
     local root = character:WaitForChild("HumanoidRootPart")
+    local hum = character:WaitForChild("Humanoid")
     local rS = character:FindFirstChild("Right Shoulder", true)
     local lS = character:FindFirstChild("Left Shoulder", true)
     local neck = character:FindFirstChild("Neck", true)
@@ -19,6 +21,17 @@ local function applyReanimation(character)
     local walkStep = 0
     local twitchTimer = 0
 
+    -- STOP EVERYTHING ON DEATH
+    _G.DeathConnection = hum.Died:Connect(function()
+        if _G.SlayerLoop then _G.SlayerLoop:Disconnect() end
+        if _G.CharacterAddedConnection then _G.CharacterAddedConnection:Disconnect() end
+        -- Reset joints to normal so the corpse isn't glitched
+        rS.C0 = rSC0
+        lS.C0 = lSC0
+        neck.C0 = nC0
+        rootJ.C0 = rJC0
+    end)
+
     _G.SlayerLoop = runService.RenderStepped:Connect(function(dt)
         if not character.Parent then _G.SlayerLoop:Disconnect() return end
         
@@ -28,7 +41,7 @@ local function applyReanimation(character)
         local lerpStep = 0.25 
         local isHoldingTool = character:FindFirstChildOfClass("Tool") ~= nil
 
-        
+        -- 1. MURDERER MOVEMENT
         if isHoldingTool and moveSpeed > 1 and yVel < 5 then
             walkStep = (walkStep + dt * moveSpeed * 0.8) % 2
             local sway = (walkStep - 1)
@@ -43,19 +56,16 @@ local function applyReanimation(character)
                 rootJ.C0 = rJC0 * CFrame.Angles(math.rad(math.random(-2, 2)), math.rad(math.random(-2, 2)), 0)
             end
 
-      
+        -- 2. PHANTOM IDLE
         elseif moveSpeed <= 1 and yVel < 5 then
             rootJ.C0 = rootJ.C0:Lerp(rJC0, lerpStep)
             neck.C0 = neck.C0:Lerp(nC0, lerpStep)
-            
-    
             lS.C0 = lS.C0:Lerp(lSC0 * CFrame.new(0.3, -0.1, -0.6) * CFrame.Angles(math.rad(95), math.rad(80), math.rad(25)), lerpStep)
-
             
             local hideTwitch = math.sin(tick() * 5) * 0.04
             rS.C0 = rS.C0:Lerp(rSC0 * CFrame.new(-0.3, -0.3, -1) * CFrame.Angles(math.rad(-180), math.rad(-80), math.rad(-15 + (hideTwitch * 80))), lerpStep)
 
-        
+        -- 3. DEFAULT
         else
             rS.C0 = rS.C0:Lerp(rSC0, lerpStep)
             lS.C0 = lS.C0:Lerp(lSC0, lerpStep)
@@ -65,5 +75,8 @@ local function applyReanimation(character)
     end)
 end
 
+-- Run it
 applyReanimation(char)
-player.CharacterAdded:Connect(applyReanimation)
+
+-- We store this connection so we can "Kill" it when you die
+_G.CharacterAddedConnection = player.CharacterAdded:Connect(applyReanimation)
