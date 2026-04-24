@@ -1,0 +1,63 @@
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local UIListLayout = Instance.new("UIListLayout")
+local Button1 = Instance.new("TextButton")
+local Button2 = Instance.new("TextButton")
+local Button3 = Instance.new("TextButton")
+
+-- Properties
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.Name = "VoidSentinelLauncher"
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.5, -110, 0.5, -80)
+MainFrame.Size = UDim2.new(0, 240, 0, 180)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = MainFrame
+
+UIListLayout.Parent = MainFrame
+UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+UIListLayout.Padding = UDim.new(0, 12)
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+
+local function StyleButton(btn, text, color)
+    btn.Parent = MainFrame
+    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    btn.BorderSizePixel = 0
+    btn.Size = UDim2.new(0, 210, 0, 40)
+    btn.Font = Enum.Font.IndieFlower
+    btn.Text = text
+    btn.TextColor3 = color
+    btn.TextSize = 14
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = btn
+end
+
+
+StyleButton(Button1, "Load Void Sentinel", Color3.new(1, 0, 1))
+StyleButton(Button2, "Void Sentinel + Mobile", Color3.new(1, 0, 1))
+StyleButton(Button3, "Leave", Color3.fromRGB(255, 50, 50))
+
+
+Button1.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/kaigamingremasterd-glitch/Chrono.sentinel.Reskin/main/Void%20Sentinel.txt"))()
+end)
+
+Button2.MouseButton1Click:Connect(function()
+    -- Loading both scripts
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/kaigamingremasterd-glitch/Mobile-control/main/Control"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/kaigamingremasterd-glitch/Chrono.sentinel.Reskin/main/Void%20Sentinel.txt"))()
+end)
+
+Button3.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
