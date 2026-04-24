@@ -1,0 +1,69 @@
+
+local player = game.Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local runService = game:GetService("RunService")
+
+if _G.SlayerLoop then _G.SlayerLoop:Disconnect() end
+
+local function applyReanimation(character)
+    local root = character:WaitForChild("HumanoidRootPart")
+    local rS = character:FindFirstChild("Right Shoulder", true)
+    local lS = character:FindFirstChild("Left Shoulder", true)
+    local neck = character:FindFirstChild("Neck", true)
+    local rootJ = character:FindFirstChild("RootJoint", true)
+
+    if not (rS and lS and neck and rootJ) then return end
+
+    local rSC0, lSC0 = rS.C0, lS.C0
+    local nC0, rJC0 = neck.C0, rootJ.C0
+    local walkStep = 0
+    local twitchTimer = 0
+
+    _G.SlayerLoop = runService.RenderStepped:Connect(function(dt)
+        if not character.Parent then _G.SlayerLoop:Disconnect() return end
+        
+        local vel = root.Velocity
+        local moveSpeed = Vector3.new(vel.X, 0, vel.Z).Magnitude
+        local yVel = math.abs(vel.Y)
+        local lerpStep = 0.25 
+        local isHoldingTool = character:FindFirstChildOfClass("Tool") ~= nil
+
+        
+        if isHoldingTool and moveSpeed > 1 and yVel < 5 then
+            walkStep = (walkStep + dt * moveSpeed * 0.8) % 2
+            local sway = (walkStep - 1)
+            
+            rS.C0 = rS.C0:Lerp(rSC0 * CFrame.Angles(math.rad(sway * 50), 0, math.rad(15)), lerpStep)
+            lS.C0 = lS.C0:Lerp(lSC0 * CFrame.Angles(math.rad(-sway * 50), 0, math.rad(-15)), lerpStep)
+
+            twitchTimer = twitchTimer + dt
+            if twitchTimer > 0.04 then
+                twitchTimer = 0
+                neck.C0 = nC0 * CFrame.Angles(math.rad(math.random(-15, 15)), math.rad(math.random(-20, 20)), math.rad(math.random(-10, 10)))
+                rootJ.C0 = rJC0 * CFrame.Angles(math.rad(math.random(-2, 2)), math.rad(math.random(-2, 2)), 0)
+            end
+
+      
+        elseif moveSpeed <= 1 and yVel < 5 then
+            rootJ.C0 = rootJ.C0:Lerp(rJC0, lerpStep)
+            neck.C0 = neck.C0:Lerp(nC0, lerpStep)
+            
+    
+            lS.C0 = lS.C0:Lerp(lSC0 * CFrame.new(0.3, -0.1, -0.6) * CFrame.Angles(math.rad(95), math.rad(80), math.rad(25)), lerpStep)
+
+            
+            local hideTwitch = math.sin(tick() * 5) * 0.04
+            rS.C0 = rS.C0:Lerp(rSC0 * CFrame.new(-0.3, -0.3, -1) * CFrame.Angles(math.rad(-180), math.rad(-80), math.rad(-15 + (hideTwitch * 80))), lerpStep)
+
+        
+        else
+            rS.C0 = rS.C0:Lerp(rSC0, lerpStep)
+            lS.C0 = lS.C0:Lerp(lSC0, lerpStep)
+            neck.C0 = neck.C0:Lerp(nC0, lerpStep)
+            rootJ.C0 = rootJ.C0:Lerp(rJC0, lerpStep)
+        end
+    end)
+end
+
+applyReanimation(char)
+player.CharacterAdded:Connect(applyReanimation)
