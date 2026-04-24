@@ -673,35 +673,35 @@ local SKILLTEXTSIZE = 6.5
 local ATTACKS = {
 	{
 		"Temporal Temper",
-		"Z"
+		 "Z"
 	},
 	{
 		"Chronostasis",
-		"X"
+		 "X"
 	},
 	{
 		"Fast Forward",
-		"C"
+		 "C"
 	},
 	{
 		"Chronos Cannon",
-		"V"
+		 "V"
 	},
 	{
 		"Temporalysis",
-		"B"
+		 "B"
 	},
 	{
 		"Chronosyntax",
-		"M"
+		 "M"
 	},
 	{
 		"Temporal Trap",
-		"G"
+		 "G"
 	},
 	{
 		"Grandfather Time",
-		"Q"
+		 "Q"
 	}
 }
 for i = 1, #ATTACKS do
