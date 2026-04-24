@@ -672,11 +672,11 @@ local SKILLFONT = "IndieFlower"
 local SKILLTEXTSIZE = 4.5
 local ATTACKS = {
 	{
-		"Temporal Temper",
+		"Void temper",
 		 "Z"
 	},
 	{
-		"Chronostasis",
+		"voidstasis",
 		 "X"
 	},
 	{
@@ -684,23 +684,23 @@ local ATTACKS = {
 		 "C"
 	},
 	{
-		"Chronos Cannon",
+		"vhronos Cannon",
 		 "V"
 	},
 	{
-		"Temporalysis",
+		"voiralysis",
 		 "B"
 	},
 	{
-		"Chronosyntax",
-		 "M"
+		"",
+		 ""
 	},
 	{
-		"Temporal Trap",
+		"Temporal Void",
 		 "G"
 	},
 	{
-		"Grandfather Time",
+		"Void Clock",
 		 "Q"
 	}
 }
