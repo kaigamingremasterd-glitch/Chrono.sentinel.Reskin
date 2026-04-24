@@ -669,7 +669,7 @@ local HALO = script.Halo
 HALO.Anchored = false
 local BASECOLOR = HALO.Color
 local SKILLFONT = "Code"
-local SKILLTEXTSIZE = 1
+local SKILLTEXTSIZE = 2
 local ATTACKS = {
 	{
 		"Temporal Temper",
