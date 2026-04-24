@@ -668,8 +668,8 @@ local PITCH = 1
 local HALO = script.Halo
 HALO.Anchored = false
 local BASECOLOR = HALO.Color
-local SKILLFONT = "Code"
-local SKILLTEXTSIZE = 2
+local SKILLFONT = "Arcade"
+local SKILLTEXTSIZE = 2.5
 local ATTACKS = {
 	{
 		"Temporal Temper",
