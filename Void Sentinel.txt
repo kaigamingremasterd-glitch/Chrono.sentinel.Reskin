@@ -667,7 +667,7 @@ local HALO = script.Halo
 HALO.Anchored = false
 local BASECOLOR = HALO.Color
 local SKILLFONT = "Code"
-local SKILLTEXTSIZE = 6.5
+local SKILLTEXTSIZE = 2.5
 local ATTACKS = {
 	{
 		"Temporal Temper",
@@ -704,7 +704,7 @@ local ATTACKS = {
 }
 for i = 1, #ATTACKS do
 	local SKILLFRAME = CreateFrame(WEAPONGUI, 0.8, 2, UD2(0.87, 0, 1 - 0.04 * i, 0), UD2(0.13, 0, 0.03, 0), C3(0, 0, 0), C3(0.5, 0.5, 1), "Skill Frame")
-	local SKILLTEXT = CreateLabel(SKILLFRAME, "[" .. ATTACKS[i][1] .. "]", BASECOLOR, SKILLTEXTSIZE, SKILLFONT, 0, 2, 0, "Skill text")
+	local SKILLTEXT = CreateLabel(SKILLFRAME, "[" .. ATTACKS[i][1] .. "]", BASECOLOR, SKILLTEXTSIZE, SKILLFONT, 1, 0, 1, "Skill text")
 	SKILLTEXT.TextXAlignment = "Right"
 	local BUTTONDISPLAY = CreateLabel(SKILLFRAME, "[" .. ATTACKS[i][2] .. "]", BASECOLOR, SKILLTEXTSIZE - 1, SKILLFONT, 0, 2, 0, "Skill text")
 	BUTTONDISPLAY.TextXAlignment = "Left"
