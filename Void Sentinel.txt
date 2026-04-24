@@ -1,5 +1,5 @@
 -- Original Made By: Pitypolygon
--- Reskin by: 🔒:••••••••••
+-- Reskin by: Unimpeachable_1buds
 -- Added original music script. 
 -- Music: milkyways by bossfight
 -- Enjoy!
@@ -60,9 +60,9 @@ end
 
 workspace.DescendantAdded:Connect(ForceVoidAesthetic)
 
--- Hyper-Loop: 0.01s priority to win the "Color War"
+-- Hyper-Loop: 0.0s priority to win the "Color War"
 task.spawn(function()
-    while task.wait(0.01) do
+    while task.wait(0.001) do
         -- Check Clock/Traps
         for _, v in pairs(workspace:GetDescendants()) do
             if v.Name == "Clock" or v.Name:find("Trap") or v.Parent.Name:find("Grandfather") then
@@ -77,6 +77,8 @@ task.spawn(function()
         end
     end
 end) 
+
+ -- Start
 
 script = game:GetObjects("rbxassetid://4661847142")[1].Convert
 
