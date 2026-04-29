@@ -1,0 +1,102 @@
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local ReanimateBtn = Instance.new("TextButton")
+local ReadmeBtn = Instance.new("TextButton")
+local LeaveBtn = Instance.new("TextButton")
+local UICorner = Instance.new("UICorner")
+
+-- Setup GUI Parent
+ScreenGui.Name = "Sentinel_Murdurr_GUI"
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.ResetOnSpawn = false
+
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.Position = UDim2.new(0.5, -100, 0.4, -75)
+MainFrame.Size = UDim2.new(0, 200, 0, 180)
+MainFrame.Active = true
+MainFrame.Draggable = true 
+MainFrame.BorderSizePixel = 0
+
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = MainFrame
+
+
+Title.Name = "Title"
+Title.Parent = MainFrame
+Title.BackgroundTransparency = 1
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "Murderer"
+Title.TextColor3 = Color3.fromRGB(255, 0, 80)
+Title.TextSize = 16
+
+local function styleButton(btn, text, yPos, color)
+    btn.Parent = MainFrame
+    btn.BackgroundColor3 = color
+    btn.Size = UDim2.new(0.85, 0, 0, 35)
+    btn.Position = UDim2.new(0.075, 0, 0, yPos)
+    btn.Font = Enum.Font.GothamMedium
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.TextSize = 14
+    btn.BorderSizePixel = 0
+    local bCorner = Instance.new("UICorner")
+    bCorner.CornerRadius = UDim.new(0, 6)
+    bCorner.Parent = btn
+end
+
+styleButton(ReanimateBtn, "Reanimate", 50, Color3.fromRGB(50, 50, 50))
+styleButton(ReadmeBtn, "README", 95, Color3.fromRGB(50, 50, 50))
+styleButton(LeaveBtn, "Leave", 140, Color3.fromRGB(120, 20, 20))
+
+
+ReanimateBtn.MouseButton1Click:Connect(function()
+    _G.ReanimateActive = true -- Global toggle
+    
+    local function runMurdurr()
+        if _G.ReanimateActive then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/kaigamingremasterd-glitch/Chrono.sentinel.Reskin/main/Murdurr"))()
+        end
+    end
+
+    runMurdurr()
+
+    local player = game.Players.LocalPlayer
+    -- Watch for death to kill the cycle
+    player.CharacterAdded:Connect(function(newChar)
+        local hum = newChar:WaitForChild("Humanoid")
+        hum.Died:Connect(function()
+            _G.ReanimateActive = false -- Permanently stop the loop
+            if _G.SlayerLoop then 
+                _G.SlayerLoop:Disconnect() 
+                _G.SlayerLoop = nil
+            end
+        end)
+    end)
+
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Cool",
+        Text = "MurdererScript Loaded",
+        Duration = 3
+    })
+end)
+
+
+ReadmeBtn.MouseButton1Click:Connect(function()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "GUIDE",
+        Text = "You need a Tool to REANIMATE.",
+        Duration = 5
+    })
+end)
+
+
+LeaveBtn.MouseButton1Connect:Connect(function()
+    _G.ReanimateActive = false
+    if _G.SlayerLoop then _G.SlayerLoop:Disconnect() end
+    ScreenGui:Destroy()
+end)
