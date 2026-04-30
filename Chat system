@@ -3,7 +3,6 @@ task.wait(0.5)
 
 local player = game.Players.LocalPlayer
 local pGui = player:WaitForChild("PlayerGui")
-local SoundService = game:GetService("SoundService")
 
 if pGui:FindFirstChild("RoundedChatSys") then
     pGui.RoundedChatSys:Destroy()
@@ -28,19 +27,6 @@ UIListLayout.Parent = Container
 UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 UIListLayout.Padding = UDim.new(0, 8)
-
-local TauntSound = Instance.new("Sound")
-TauntSound.Name = "PatchouliVoice"
-TauntSound.SoundId = "assetid://118575496502909"
-TauntSound.Volume = 10
-TauntSound.Parent = SoundService
-
-player.CharacterAdded:Connect(function(char)
-    local humanoid = char:WaitForChild("Humanoid")
-    humanoid.Died:Connect(function()
-        TauntSound:Stop()
-    end)
-end)
 
 local function createMessage(msg)
     local TextService = game:GetService("TextService")
@@ -91,7 +77,6 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
     if not gpe and input.KeyCode == Enum.KeyCode.T then
         if player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
             task.spawn(function()
-                TauntSound:Play()
                 createMessage("IM JUST..")
                 task.wait(0.1) 
                 createMessage("A BIT. TIRED")
