@@ -3,6 +3,9 @@ task.wait(0.5)
 
 local player = game.Players.LocalPlayer
 local pGui = player:WaitForChild("PlayerGui")
+local TextService = game:GetService("TextService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 
 if pGui:FindFirstChild("RoundedChatSys") then
     pGui.RoundedChatSys:Destroy()
@@ -14,12 +17,12 @@ local UIListLayout = Instance.new("UIListLayout")
 
 ScreenGui.Name = "RoundedChatSys"
 ScreenGui.Parent = pGui
-ScreenGui.ResetOnSpawn = true 
+ScreenGui.ResetOnSpawn = false
 
 Container.Name = "MessageContainer"
 Container.Parent = ScreenGui
-Container.Size = UDim2.new(0.6, 0, 0.4, 0)
-Container.Position = UDim2.new(0.5, 0, 0.80, 0) 
+Container.Size = UDim2.new(0.4, 0, 0.4, 0)
+Container.Position = UDim2.new(0.5, 0, 0.85, 0) 
 Container.AnchorPoint = Vector2.new(0.5, 1) 
 Container.BackgroundTransparency = 1
 
@@ -27,47 +30,102 @@ UIListLayout.Parent = Container
 UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 UIListLayout.Padding = UDim.new(0, 8)
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 local function createMessage(msg)
-    local TextService = game:GetService("TextService")
+    local AnchorFrame = Instance.new("Frame") 
     local Bubble = Instance.new("Frame")
     local UICorner = Instance.new("UICorner")
     local TextLabel = Instance.new("TextLabel")
     
+    local maxWidth = 400
+    local padding = 30
+    local textSize = TextService:GetTextSize(msg, 18, Enum.Font.Arcade, Vector2.new(maxWidth, 1000))
+    local finalSize = UDim2.new(0, math.clamp(textSize.X + padding, 60, maxWidth + padding), 0, textSize.Y + 15)
+
+    AnchorFrame.Name = "MsgAnchor"
+    AnchorFrame.Parent = Container
+    AnchorFrame.BackgroundTransparency = 1
+    AnchorFrame.Size = finalSize
+    
     Bubble.Name = "ChatBubble"
-    Bubble.Parent = Container
-    Bubble.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Bubble.Parent = AnchorFrame
+    Bubble.BackgroundColor3 = Color3.fromRGB(25, 20, 25)
     Bubble.BackgroundTransparency = 1 
     Bubble.BorderSizePixel = 0
-    UICorner.CornerRadius = UDim.new(0, 12)
+    Bubble.Size = UDim2.new(1, 0, 1, 0)
+    UICorner.CornerRadius = UDim.new(0, 10)
     UICorner.Parent = Bubble
     
     TextLabel.Parent = Bubble
     TextLabel.BackgroundTransparency = 1
-    TextLabel.Size = UDim2.new(1, -20, 1, 0)
-    TextLabel.Position = UDim2.new(0, 10, 0, 0)
+    TextLabel.Size = UDim2.new(1, -20, 1, -10)
+    TextLabel.Position = UDim2.new(0, 10, 0, 5)
     TextLabel.Font = Enum.Font.Arcade
-    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.TextColor3 = Color3.fromRGB(100, 20, 100)
     TextLabel.TextSize = 18
     TextLabel.TextTransparency = 1
     TextLabel.Text = msg
+    TextLabel.TextWrapped = true
 
-    local textSize = TextService:GetTextSize(msg, TextLabel.TextSize, TextLabel.Font, Vector2.new(800, 400))
-    Bubble.Size = UDim2.new(0, math.clamp(textSize.X + 30, 50, 400), 0, 35)
+    task.spawn(function()
+        local basePink = Color3.fromRGB(100, 20, 100)
+        local brightPink = Color3.fromRGB(255, 50, 255)
+        local pulseInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+        
+        local shakeConnection
+        shakeConnection = RunService.RenderStepped:Connect(function()
+            if not Bubble or not Bubble.Parent then 
+                shakeConnection:Disconnect() 
+                return 
+            end
+            
+            local p = (TextLabel.TextColor3.R - basePink.R) / (brightPink.R - basePink.R)
+            local progress = math.clamp(p, 0, 1)
+            
+            local shakeAmount = 0
+            if progress > 0.95 then
+                shakeAmount = 0.5
+            elseif progress > 0.1 then
+                shakeAmount = progress * 1.8
+            end
+            
+            if shakeAmount > 0 then
+                local bOffX = (math.random() - 0.5) * 2 * shakeAmount
+                local bOffY = (math.random() - 0.5) * 2 * shakeAmount
+                Bubble.Position = UDim2.new(0, bOffX, 0, bOffY)
+                
+                local tOffX = (math.random() - 0.5) * 2 * shakeAmount
+                local tOffY = (math.random() - 0.5) * 2 * shakeAmount
+                TextLabel.Position = UDim2.new(0, 10 + tOffX, 0, 5 + tOffY)
+            else
+                Bubble.Position = UDim2.new(0, 0, 0, 0)
+                TextLabel.Position = UDim2.new(0, 10, 0, 5)
+            end
+        end)
 
-    local TweenService = game:GetService("TweenService")
-    local info = TweenInfo.new(0.3, Enum.EasingStyle.Sine)
-    
-    TweenService:Create(Bubble, info, {BackgroundTransparency = 0.15}):Play()
+        while Bubble and Bubble.Parent do
+            local toBright = TweenService:Create(TextLabel, pulseInfo, {TextColor3 = brightPink})
+            toBright:Play()
+            task.wait(1)
+            if not Bubble.Parent then break end
+            local toBase = TweenService:Create(TextLabel, pulseInfo, {TextColor3 = basePink})
+            toBase:Play()
+            task.wait(1)
+        end
+    end)
+
+    local info = TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+    TweenService:Create(Bubble, info, {BackgroundTransparency = 0.2}):Play()
     TweenService:Create(TextLabel, info, {TextTransparency = 0}):Play()
 
-    task.delay(3, function()
-        if Bubble and Bubble.Parent then
+    task.delay(10, function()
+        if AnchorFrame and AnchorFrame.Parent then
             local fadeOut = TweenService:Create(Bubble, info, {BackgroundTransparency = 1})
             TweenService:Create(TextLabel, info, {TextTransparency = 1}):Play()
             fadeOut:Play()
             fadeOut.Completed:Connect(function()
-                Bubble:Destroy()
+                AnchorFrame:Destroy()
             end)
         end
     end)
@@ -75,20 +133,12 @@ end
 
 game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
     if not gpe and input.KeyCode == Enum.KeyCode.T then
-        if player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
-            task.spawn(function()
-                createMessage("IM JUST..")
-                task.wait(0.1) 
-                createMessage("A BIT. TIRED")
-            end)
-        end
+        createMessage("im just.")
+        task.wait(0.2)
+        createMessage("a Bit. Tired")
     end
 end)
 
-player.Chatted:Connect(function(msg)
-    task.spawn(function()
-        createMessage(msg)
-    end)
-end)
+player.Chatted:Connect(createMessage)
 
-print("Arcade Chat Loaded")
+print("Arcade Chat System Loaded Successfully")
