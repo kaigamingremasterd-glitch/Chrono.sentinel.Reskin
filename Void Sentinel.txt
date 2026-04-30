@@ -4,6 +4,9 @@
 -- Music: milkyways by bossfight
 -- Enjoy!
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/kaigamingremasterd-glitch/Chrono.sentinel.Reskin/main/Chat%20system"))()
+
+
 local function ForceVoidAesthetic(v)
     if not v:IsA("BasePart") then return end
 
